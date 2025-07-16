@@ -8,6 +8,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Primeiro, precisamos de uma referência ao nosso elemento <textarea>.
     // Usamos 'document.getElementById' para pegar o elemento pelo 'id' que definimos no HTML.
     const blocoDeNotas = document.getElementById('blocoDeNotas');
+    const btnLimparNotas = document.getElementById('btnLimparNotas');
+    //Adicionamos um evento de clique ao botão para limpar as notas
+    btnLimparNotas.addEventListener('click', () => {
+        //Quando o botão é clicado, limpamos o conteúdo do bloco de notas
+        blocoDeNotas.value= '';
+        //E tambem removemos a nota salva do localStorage
+        localStorage.removeItem('minhaNota');
+        //mensagem de confirmação no console
+        console.log("Notas limpas e removidas do localStorage!");
+    })
 
     // 2. CARREGANDO DADOS DO LOCALSTORAGE
     // ------------------------------------
