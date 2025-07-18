@@ -3,63 +3,69 @@
 // que ainda não existem na página.
 document.addEventListener('DOMContentLoaded', () => {
 
-    // 1. SELECIONANDO O ELEMENTO
+    // 1. SELECIONANDO OS ELEMENTOS
     // ----------------------------
-    // Primeiro, precisamos de uma referência ao nosso elemento <textarea>.
-    // Usamos 'document.getElementById' para pegar o elemento pelo 'id' que definimos no HTML.
+    // Pegamos referências aos elementos necessários na página.
     const blocoDeNotas = document.getElementById('blocoDeNotas');
     const btnLimparNotas = document.getElementById('btnLimparNotas');
     const btnSalvarNotas = document.getElementById('btnSalvarNotas');
+    const btnDarkMode = document.getElementById('btnDarkMode'); // Botão para alternar o modo escuro
 
-    //Adicionamos um evento de clique ao botão para limpar as notas
+    // 2. APLICANDO MODO ESCURO SALVO (SE HOUVER)
+    // ------------------------------------------
+    // Verificamos se o usuário já escolheu o modo escuro anteriormente.
+    // Essa informação é salva no localStorage com a chave 'modoEscuro'.
+    const modoSalvo = localStorage.getItem('modoEscuro');
+    if (modoSalvo === 'true') {
+        // Se o modo escuro estiver ativado, aplicamos a classe ao <body>
+        document.body.classList.add('dark-mode');
+        // E atualizamos o texto do botão
+        btnDarkMode.textContent = 'Desativar Dark Mode';
+    }
+
+    // 3. ADICIONANDO FUNCIONALIDADE AO BOTÃO DARK MODE
+    // -------------------------------------------------
+    // Ouvimos o clique no botão de Dark Mode para alternar entre claro e escuro
+    btnDarkMode.addEventListener('click', () => {
+        // Alternamos a classe 'dark-mode' no <body>
+        const modoAtivo = document.body.classList.toggle('dark-mode');
+
+        // Salvamos a preferência no localStorage
+        localStorage.setItem('modoEscuro', modoAtivo);
+
+        // Atualizamos o texto do botão com base no estado atual
+        btnDarkMode.textContent = modoAtivo ? 'Desativar Dark Mode' : 'Ativar Dark Mode';
+    });
+
+    // 4. ADICIONANDO EVENTO PARA LIMPAR AS NOTAS
+    // ------------------------------------------
+    // Quando o botão é clicado, limpamos o conteúdo do bloco de notas
     btnLimparNotas.addEventListener('click', () => {
-        //Quando o botão é clicado, limpamos o conteúdo do bloco de notas
-        blocoDeNotas.value= '';
-        //E tambem removemos a nota salva do localStorage
+        blocoDeNotas.value = '';
+        // E também removemos a nota salva do localStorage
         localStorage.removeItem('minhaNota');
-        //mensagem de confirmação no console
+        // Mensagem de confirmação no console
         console.log("Notas limpas e removidas do localStorage!");
-    })
+    });
 
-    // 2. CARREGANDO DADOS DO LOCALSTORAGE
+    // 5. CARREGANDO DADOS DO LOCALSTORAGE
     // ------------------------------------
-    // O 'localStorage' é um recurso do navegador que permite salvar informações
-    // que persistem mesmo depois que o navegador é fechado.
-    // Usamos 'localStorage.getItem()' para buscar um item salvo.
-    // Aqui, estamos procurando por um item que salvamos com a chave 'minhaNota'.
+    // Buscamos a nota salva anteriormente, se houver
     const notaSalva = localStorage.getItem('minhaNota');
-
-    // Verificamos se encontramos alguma nota salva.
     if (notaSalva) {
-        // Se 'notaSalva' não for nulo (ou seja, existe algo salvo),
-        // nós colocamos o valor salvo de volta no nosso 'blocoDeNotas'.
+        // Se encontrarmos uma nota, colocamos no <textarea>
         blocoDeNotas.value = notaSalva;
     }
 
-    // 3. ADICIONANDO UM 'EVENTLISTENER'
-    // ---------------------------------
-    // Agora, a parte principal: queremos fazer algo sempre que o usuário digitar.
-    // O 'addEventListener' é como um "ouvinte" que fica esperando por uma ação específica.
-    //
-    // Parâmetros do addEventListener:
-    //   - O primeiro é o TIPO DE EVENTO que queremos ouvir. 'input' é disparado
-    //     toda vez que o valor do <textarea> muda (ou seja, o usuário digita, apaga, etc).
-    //   - O segundo é a FUNÇÃO que será executada quando o evento acontecer.
-    //     Esta função é chamada de "callback".
+    // 6. ADICIONANDO EVENTO PARA SALVAR NOTAS
+    // ---------------------------------------
+    // Quando o botão "Salvar Notas" é clicado, salvamos o conteúdo atual
     btnSalvarNotas.addEventListener('click', () => {
-        // 4. SALVANDO DADOS NO LOCALSTORAGE
-        // -----------------------------------
-        // Dentro da nossa função de callback, pegamos o valor atual do bloco de notas
-        // e o salvamos no localStorage.
-        // Usamos 'localStorage.setItem()' para isso.
-        //
-        // Parâmetros do setItem:
-        //   - O primeiro é a CHAVE (o "nome" do nosso dado). Usaremos a mesma chave 'minhaNota'.
-        //   - O segundo é o VALOR que queremos salvar. 'blocoDeNotas.value' contém o texto
-        //     que está atualmente na área de texto.
+        // Pegamos o texto atual e salvamos no localStorage
         localStorage.setItem('minhaNota', blocoDeNotas.value);
 
-        console.log("Nota salva no localStorage!"); // Uma mensagem no console para fins de depuração.
+        // Mensagem de depuração no console
+        console.log("Nota salva no localStorage!");
     });
 
 });
